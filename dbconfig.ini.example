@@ -1,0 +1,6 @@
+[DEFAULT]
+HOST = test.db.com
+ID = root
+PASSWD = toor
+DATABASE = twitter_TI
+
