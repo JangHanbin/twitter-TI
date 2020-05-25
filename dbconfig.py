@@ -11,3 +11,21 @@ class Database():
     def get_table(self, table_name):
         table = db.Table(table_name, self.metadata, autoload=True, autoload_with=self.engine)
         return table
+
+    def insert(self, table, values):
+        query = db.insert(table).values(values).prefix_with('IGNORE')
+        result_proxy = self.connection.execute(query)
+        return result_proxy.rowcount
+
+
+    def select(self, table, condition=None):
+        if condition is not None:
+            query = db.select([table]).where(condition)
+        else:
+            query = db.select([table])
+
+        result_proxy = self.connection.execute(query)
+        result_set = result_proxy.fetchall()
+        return [result[0] for result in result_set]
+
+

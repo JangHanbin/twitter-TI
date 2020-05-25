@@ -13,7 +13,9 @@ if __name__=='__main__':
 
 
     database = Database(db_id, passwd, host, db_name)
-    table = database.get_table('keywords')
+
+    keywords = database.get_table('keywords')
+    users = database.get_table('users')
 
 
-    print(table.columns)
+
