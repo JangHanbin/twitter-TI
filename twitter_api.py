@@ -10,8 +10,8 @@ class Twitter():
                   access_token_secret=access_token_secret)
 
 
-
     def get_timeline(self, user_id):
-        result = self.api.GetUserTimeline(screen_name=user_id, max_id=1262748142778249220)
-        return result
+        tweets = self.api.GetUserTimeline(screen_name=user_id, max_id=1262748142778249220, count=20)
+        return tweets
+
 

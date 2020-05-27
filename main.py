@@ -16,7 +16,8 @@ if __name__=='__main__':
     database = Database(db_id, passwd, host, db_name)
 
     keywords = database.get_table('keywords')
-    users = database.get_table('users')
+    experts = database.get_table('experts')
+
 
     twitter_config = configparser.ConfigParser()
     twitter_config.read('api.ini')
@@ -26,10 +27,9 @@ if __name__=='__main__':
     access_token_secret = twitter_config['twitter']['access_token_secret']
 
     twitter = Twitter(consumer_key, consumer_secret, access_token_key, access_token_secret)
-    test = twitter.get_timeline('cyberwar')
-    for t in test:
-        print(t)
-
+    tweets = twitter.get_timeline('cyberwar')
+    for tweet in tweets:
+        print(tweet)
 
 
 
