@@ -46,8 +46,12 @@ if __name__=='__main__':
             since_id = database.select(experts.columns.since_id, experts.columns.twitter_id == twitter_id)[0]
             if not since_id:
                 since_id=0
+            try:
+                data = twitter.get_all_timeline(twitter_id, since_id=since_id)
 
-            data = twitter.get_all_timeline(twitter_id, since_id=since_id)
+            except Exception as e:
+                print(e)
+                print(twitter_id)
 
             if not data:
                 continue
