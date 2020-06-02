@@ -17,6 +17,10 @@ class Database():
         result_proxy = self.connection.execute(query)
         return result_proxy.rowcount
 
+    def update_since_id(self, table, value, condition=None):
+        query = db.update(table).values(since_id=value).where(condition)
+        result_proxy = self.connection.execute(query)
+        return result_proxy.rowcount
 
     def select(self, table, condition=None):
         if condition is not None:

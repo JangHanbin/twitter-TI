@@ -1,6 +1,7 @@
 CREATE TABLE tweets (
 	id_str			BIGINT	PRIMARY KEY,
 	id 				BIGINT,
+	screen_name VARCHAR(100),
 	created_at 		TIMESTAMP,
 	text			VARCHAR(500),
 	source 			VARCHAR(1000),
@@ -21,27 +22,6 @@ CREATE TABLE tweets (
 	search_stamp		TIMESTAMP
 	);
 
-CREATE TABLE users (
-	tweet_id		BIGINT,
-	id				BIGINT,
-	id_str			BIGINT,
-	name			VARCHAR(100),
-	screen_name		VARCHAR(100),
-	location		VARCHAR(1000),
-	url				TEXT,
-	description		VARCHAR(1000),
-	verified		BOOLEAN,
-	followers_count	INT,
-	friends_count	INT,
-	listed_count	INT,
-	favourites_count		INT,
-	statuses_count	INT,
-	created_at		TIMESTAMP,
-
-
-	FOREIGN KEY (tweet_id)
-	REFERENCES tweets (id_str) ON UPDATE CASCADE ON DELETE CASCADE
-);
 
 CREATE TABLE hashtag (
 	tweet_id 		BIGINT,
@@ -54,6 +34,7 @@ CREATE TABLE hashtag (
 
 CREATE TABLE experts (
 	twitter_id	VARCHAR(100) PRIMARY KEY
+	since_id BIGINT
 );
 
 CREATE TABLE keywords (
