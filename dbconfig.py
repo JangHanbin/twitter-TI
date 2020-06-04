@@ -3,7 +3,7 @@ import sqlalchemy as db
 
 class Database():
     def __init__(self, id, passwd, host, db_name):
-        self.engine = db.create_engine('mysql+pymysql://{0}:{1}@{2}/{3}'.format(id, passwd, host, db_name), pool_pre_ping=True)
+        self.engine = db.create_engine('mysql+pymysql://{0}:{1}@{2}/{3}'.format(id, passwd, host, db_name), pool_pre_ping=True, pool_recycle=1800)
         self.connection = self.engine.connect()
         self.metadata = db.MetaData()
 
