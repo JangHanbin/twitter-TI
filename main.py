@@ -3,6 +3,36 @@ from dbconfig import Database
 from twitter_api import Twitter
 import logging
 from time import sleep
+from word_processing import Preprocessing
+
+
+def search_posts():
+    while True:
+        for twitter_id in database.select(experts.columns.twitter_id):
+            since_id = database.select(experts.columns.since_id, experts.columns.twitter_id == twitter_id)[0]
+            if not since_id:
+                since_id = 0
+            try:
+                data = twitter.get_all_timeline(twitter_id, since_id=since_id)
+
+            except Exception as e:
+                print(e)
+                print(twitter_id)
+
+            if not data:
+                continue
+
+            since_id = data[0][0]  # to update since_id, set since_id to largest id_str
+            database.update_since_id(experts, since_id, experts.columns.twitter_id == twitter_id)
+            logger.info('Update since_id {0} to {1}'.format(since_id, twitter_id))
+
+            for tweet in data:
+                database.insert(tweets, tweet)
+                logger.info('Success insert {0}'.format(tweet))
+
+        logger.info('The cycle has been complete. retry after 600 secs..')
+        sleep(600)
+
 
 if __name__=='__main__':
 
@@ -40,32 +70,21 @@ if __name__=='__main__':
         logger.addHandler(file_handler)
         logger.addHandler(stream_handler)
 
+    preprocessing = Preprocessing()
 
-    while True:
-        for twitter_id in database.select(experts.columns.twitter_id):
-            since_id = database.select(experts.columns.since_id, experts.columns.twitter_id == twitter_id)[0]
-            if not since_id:
-                since_id=0
-            try:
-                data = twitter.get_all_timeline(twitter_id, since_id=since_id)
+    keyword_list = database.select(keywords)
+    print(keyword_list)
 
-            except Exception as e:
-                print(e)
-                print(twitter_id)
 
-            if not data:
-                continue
+    for text in database.select(tweets.columns.text, tweets.columns.screen_name == 'k8em0'):
+        if any(keyword in text for keyword in keyword_list): # filter tweets by keyword list
+            print(text)
+            token = preprocessing.tokenize(text)
+            print(token)
+            # for t in token:
+            #     if t in keyword_list:
+            #         print(t)
 
-            since_id = data[0][0] # to update since_id, set since_id to largest id_str
-            database.update_since_id(experts, since_id, experts.columns.twitter_id==twitter_id)
-            logger.info('Update since_id {0} to {1}'.format(since_id, twitter_id))
-
-            for tweet in data:
-                database.insert(tweets, tweet)
-                logger.info('Success insert {0}'.format(tweet))
-
-        logger.info('The cycle has been complete. retry after 600 secs..')
-        sleep(600)
 
 
 
